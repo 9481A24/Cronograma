@@ -1,282 +1,177 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Cronograma de Obra - Gênesis Azulejista</title>
-  <style>
-    :root{--bg:#f7f7f9;--card:#fff;--accent:#ffc107;--text:#222}
-    body{font-family:Inter, system-ui, Arial; background:var(--bg); color:var(--text); margin:0;padding:20px}
-    .container{max-width:1000px;margin:0 auto}
-    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    h1{margin:0;font-size:20px}
-    .card{background:var(--card);border-radius:10px;padding:16px;box-shadow:0 6px 18px rgba(0,0,0,.06);margin-top:12px}
-    form{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
-    label{font-size:12px}
-    input,select,button{padding:8px;border-radius:6px;border:1px solid #ddd;font-size:14px}
-    input[type=date]{padding:6px}
-    .full{grid-column:span 6}
-    .span3{grid-column:span 3}
-    .span2{grid-column:span 2}
-    .actions{display:flex;gap:8px}
-    table{width:100%;border-collapse:collapse;margin-top:12px}
-    th,td{padding:8px;border-bottom:1px solid #eee;text-align:left;font-size:14px}
-    th{background:#fafafa}
-    .right{text-align:right}
-    .small{font-size:12px;color:#666}
-    .badge{display:inline-block;padding:4px 8px;border-radius:8px;font-size:12px}
-    .btn{cursor:pointer}
-    .btn-primary{background:var(--accent);border:none;color:#000}
-    .btn-ghost{background:transparent;border:1px solid #ddd}
-    .progress{height:10px;background:#eee;border-radius:6px;overflow:hidden}
-    .prog-inner{height:100%;background:linear-gradient(90deg, #ffd54a, #ffb300)}
-    @media (max-width:800px){form{grid-template-columns:repeat(2,1fr)}.span3{grid-column:span 2}.span2{grid-column:span 2}}
-    /* print */
-    @media print{
-      body{background:white}
-      .no-print{display:none}
-      .card{box-shadow:none}
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Relato Diário de Obra - Gênesis Azulejista</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  h1 {
+    text-align: center;
+    color: #222;
+  }
+  label {
+    font-weight: bold;
+  }
+  input, textarea, button {
+    width: 100%;
+    margin-top: 5px;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  button {
+    background: #ffc107;
+    border: none;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  button:hover { background: #ffb300; }
+  .relato {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+  }
+  .data {
+    font-weight: bold;
+  }
+  .acoes {
+    text-align: right;
+    margin-top: 5px;
+  }
+  .acoes button {
+    background: #eee;
+    color: #000;
+    margin-left: 5px;
+  }
+  @media print {
+    .no-print { display: none; }
+    body { background: white; }
+    .container { box-shadow: none; }
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div>
-        <h1>Cronograma de Obra - Gênesis Azulejista</h1>
-        <div class="small">Registre início, fim, valor e acompanhe dias trabalhados e rendimento.</div>
-      </div>
-      <div class="no-print actions">
-        <button class="btn btn-ghost" id="importBtn">Importar JSON</button>
-        <button class="btn btn-ghost" id="exportBtn">Exportar JSON</button>
-        <button class="btn btn-primary" id="printBtn">Imprimir</button>
-      </div>
-    </header>
+<div class="container">
+  <h1>Relato Diário de Obra - Gênesis Azulejista</h1>
 
-    <section class="card">
-      <form id="entryForm">
-        <div>
-          <label for="service">Serviço</label>
-          <input id="service" required placeholder="Ex: Assentamento porcelanato" />
-        </div>
-        <div>
-          <label for="start">Data início</label>
-          <input id="start" type="date" required />
-        </div>
-        <div>
-          <label for="end">Data término</label>
-          <input id="end" type="date" />
-        </div>
-        <div>
-          <label for="value">Valor (R$)</label>
-          <input id="value" type="number" step="0.01" placeholder="0.00" />
-        </div>
-        <div>
-          <label for="progress">Rendimento (%)</label>
-          <input id="progress" type="number" min="0" max="100" value="0" />
-        </div>
-        <div class="span2" style="display:flex;align-items:flex-end;justify-content:flex-end">
-          <input type="hidden" id="editingId" />
-          <button type="submit" class="btn btn-primary">Salvar</button>
-          <button type="button" id="resetBtn" class="btn btn-ghost" style="margin-left:8px">Limpar</button>
-        </div>
-      </form>
+  <div class="no-print">
+    <label>Nome da Obra ou Cliente:</label>
+    <input id="obra" placeholder="Ex: Obra da Sra. Paula - Banheiro">
 
-      <div id="summary" style="margin-top:12px" class="small"></div>
+    <label>Data do Dia:</label>
+    <input type="date" id="data">
 
-      <table id="entriesTable" class="no-print">
-        <thead>
-          <tr>
-            <th>Serviço</th>
-            <th>Início</th>
-            <th>Término</th>
-            <th>Dias</th>
-            <th>Valor (R$)</th>
-            <th>%</th>
-            <th class="right">Ações</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+    <label>O que foi feito nesse dia:</label>
+    <textarea id="descricao" rows="3" placeholder="Ex: Assentado porcelanato 12m² na cozinha"></textarea>
 
-      <div id="printList" style="display:none;margin-top:12px"></div>
-    </section>
-
+    <button id="salvar">Salvar Relato</button>
+    <button id="imprimir">Imprimir Relatório</button>
   </div>
 
-  <script>
-    // Helpers
-    const $ = id => document.getElementById(id)
-    const LS_KEY = 'cronograma_genesis_v1'
+  <h2>Relatos Salvos</h2>
+  <div id="lista"></div>
+</div>
 
-    function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+<script>
+const LS_KEY = "relatos_obra_genesis";
 
-    function load(){
-      try{
-        const raw = localStorage.getItem(LS_KEY)
-        return raw? JSON.parse(raw) : []
-      }catch(e){return []}
-    }
-    function save(data){localStorage.setItem(LS_KEY, JSON.stringify(data))}
+function carregar() {
+  const dados = localStorage.getItem(LS_KEY);
+  return dados ? JSON.parse(dados) : [];
+}
 
-    function daysBetween(a,b){
-      if(!a) return 0
-      const d1 = new Date(a)
-      const d2 = b? new Date(b) : new Date()
-      // normalize 00:00 to avoid DST issues
-      const nd1 = Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate())
-      const nd2 = Date.UTC(d2.getFullYear(), d2.getMonth(), d2.getDate())
-      const diff = Math.floor((nd2 - nd1) / (1000*60*60*24))
-      return diff >= 0 ? diff+1 : 0
-    }
+function salvar(dados) {
+  localStorage.setItem(LS_KEY, JSON.stringify(dados));
+}
 
-    // UI
-    const form = $('entryForm')
-    const tableBody = document.querySelector('#entriesTable tbody')
-    const summary = $('summary')
+function renderizar() {
+  const lista = document.getElementById("lista");
+  const dados = carregar().sort((a, b) => new Date(b.data) - new Date(a.data));
+  lista.innerHTML = "";
 
-    function render(){
-      const data = load()
-      tableBody.innerHTML = ''
-      let totalValor=0, totalDias=0
-      data.forEach(item=>{
-        const tr = document.createElement('tr')
-        const dias = daysBetween(item.start, item.end)
-        totalValor += Number(item.value||0)
-        totalDias += dias
-        tr.innerHTML = `
-          <td>${escapeHtml(item.service)}</td>
-          <td>${item.start||''}</td>
-          <td>${item.end||''}</td>
-          <td>${dias}</td>
-          <td>R$ ${Number(item.value||0).toFixed(2)}</td>
-          <td>
-            <div style="min-width:120px">
-              <div class="small">${item.progress||0}%</div>
-              <div class="progress" aria-hidden><div class="prog-inner" style="width:${Math.max(0,Math.min(100,item.progress||0))}%"></div></div>
-            </div>
-          </td>
-          <td class="right">
-            <button class="btn btn-ghost" data-id="${item.id}" data-action="edit">Editar</button>
-            <button class="btn btn-ghost" data-id="${item.id}" data-action="delete">Excluir</button>
-          </td>
-        `
-        tableBody.appendChild(tr)
-      })
-      summary.innerHTML = `<strong>${data.length}</strong> serviços • Total valor: <strong>R$ ${totalValor.toFixed(2)}</strong> • Total dias (soma): <strong>${totalDias}</strong>`
-    }
+  dados.forEach((item, i) => {
+    const div = document.createElement("div");
+    div.className = "relato";
+    div.innerHTML = `
+      <div class="data">${item.data} — <b>${item.obra}</b></div>
+      <div>${item.descricao}</div>
+      <div class="acoes no-print">
+        <button onclick="editar(${i})">Editar</button>
+        <button onclick="excluir(${i})">Excluir</button>
+      </div>
+    `;
+    lista.appendChild(div);
+  });
+}
 
-    function escapeHtml(str){
-      if(!str) return ''
-      return String(str).replace(/[&<>"']/g, s=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[s]))
-    }
+function editar(i) {
+  const dados = carregar();
+  const item = dados[i];
+  document.getElementById("obra").value = item.obra;
+  document.getElementById("data").value = item.data;
+  document.getElementById("descricao").value = item.descricao;
+  excluir(i);
+}
 
-    // Form submit
-    form.addEventListener('submit', e=>{
-      e.preventDefault()
-      const id = $('editingId').value
-      const service = $('service').value.trim()
-      const start = $('start').value
-      const end = $('end').value
-      const value = $('value').value
-      const progress = Number($('progress').value||0)
-      if(!service || !start){alert('Preencha o serviço e data de início');return}
-      const data = load()
-      if(id){
-        const idx = data.findIndex(x=>x.id===id)
-        if(idx>=0){
-          data[idx] = {...data[idx],service,start,end,value,progress}
-        }
-      }else{
-        data.push({id:uid(),service,start,end,value,progress})
-      }
-      save(data)
-      form.reset()
-      $('editingId').value = ''
-      render()
-    })
+function excluir(i) {
+  const dados = carregar();
+  if (confirm("Excluir este relato?")) {
+    dados.splice(i, 1);
+    salvar(dados);
+    renderizar();
+  }
+}
 
-    // Reset button
-    $('resetBtn').addEventListener('click', ()=>{form.reset();$('editingId').value='';})
+document.getElementById("salvar").addEventListener("click", () => {
+  const obra = document.getElementById("obra").value.trim();
+  const data = document.getElementById("data").value;
+  const descricao = document.getElementById("descricao").value.trim();
 
-    // Table actions
-    tableBody.addEventListener('click', e=>{
-      const btn = e.target.closest('button')
-      if(!btn) return
-      const id = btn.dataset.id
-      const action = btn.dataset.action
-      let data = load()
-      if(action==='delete'){
-        if(confirm('Excluir este registro?')){
-          data = data.filter(x=>x.id!==id)
-          save(data); render()
-        }
-      }else if(action==='edit'){
-        const item = data.find(x=>x.id===id)
-        if(item){
-          $('service').value = item.service
-          $('start').value = item.start
-          $('end').value = item.end
-          $('value').value = item.value
-          $('progress').value = item.progress
-          $('editingId').value = item.id
-          window.scrollTo({top:0,behavior:'smooth'})
-        }
-      }
-    })
+  if (!data || !descricao) {
+    alert("Preencha a data e o que foi feito!");
+    return;
+  }
 
-    // Import / Export
-    $('exportBtn').addEventListener('click', ()=>{
-      const data = load()
-      const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'})
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url; a.download = 'cronograma_genesis.json'
-      a.click()
-      URL.revokeObjectURL(url)
-    })
+  const dados = carregar();
+  dados.push({ obra, data, descricao });
+  salvar(dados);
 
-    $('importBtn').addEventListener('click', ()=>{
-      const input = document.createElement('input')
-      input.type='file'; input.accept='.json'
-      input.onchange = e => {
-        const f = e.target.files[0]
-        if(!f) return
-        const reader = new FileReader()
-        reader.onload = ()=>{
-          try{
-            const parsed = JSON.parse(reader.result)
-            if(Array.isArray(parsed)){
-              if(confirm('Substituir os dados atuais pelo arquivo importado?')){
-                save(parsed); render();
-              }
-            }else alert('Arquivo inválido')
-          }catch(err){alert('Erro ao ler o arquivo')}
-        }
-        reader.readAsText(f)
-      }
-      input.click()
-    })
+  document.getElementById("data").value = "";
+  document.getElementById("descricao").value = "";
 
-    // Print
-    $('printBtn').addEventListener('click', ()=>{
-      // Prepare printable list
-      const data = load()
-      let html = `<h2>Cronograma de Obra - Gênesis Azulejista</h2>`
-      html += `<table style="width:100%;border-collapse:collapse">`
-      html += `<thead><tr><th>Serviço</th><th>Início</th><th>Término</th><th>Dias</th><th>Valor</th><th>%</th></tr></thead><tbody>`
-      data.forEach(it=>{
-        html += `<tr><td style="padding:6px;border-bottom:1px solid #ddd">${escapeHtml(it.service)}</td><td style="padding:6px;border-bottom:1px solid #ddd">${it.start||''}</td><td style="padding:6px;border-bottom:1px solid #ddd">${it.end||''}</td><td style="padding:6px;border-bottom:1px solid #ddd">${daysBetween(it.start,it.end)}</td><td style="padding:6px;border-bottom:1px solid #ddd">R$ ${Number(it.value||0).toFixed(2)}</td><td style="padding:6px;border-bottom:1px solid #ddd">${it.progress||0}%</td></tr>`
-      })
-      html += `</tbody></table>`
-      const w = window.open('','_blank')
-      w.document.write(`<html><head><title>Imprimir cronograma</title><meta charset="utf-8"></head><body>${html}</body></html>`)
-      w.document.close();
-      w.print()
-    })
+  renderizar();
+});
 
-    // On load
-    render()
-  </script>
+document.getElementById("imprimir").addEventListener("click", () => {
+  const dados = carregar().sort((a, b) => new Date(a.data) - new Date(b.data));
+  let html = `<h2>Relato Diário de Obra - Gênesis Azulejista</h2>`;
+  dados.forEach(item => {
+    html += `<p><b>${item.data}</b> — ${item.obra || ""}<br>${item.descricao}</p>`;
+  });
+  const w = window.open("", "_blank");
+  w.document.write(`<html><head><title>Relatório</title><meta charset='utf-8'></head><body>${html}</body></html>`);
+  w.document.close();
+  w.print();
+});
+
+renderizar();
+</script>
 </body>
 </html>
